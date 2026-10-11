@@ -1,0 +1,118 @@
+{
+  "platform": "macOS-15.7.7-arm64-arm-64bit-Mach-O",
+  "architecture": "arm64",
+  "core": {
+    "python311": {
+      "python": "3.11.12 | packaged by conda-forge | (main, Apr 10 2025, 22:18:52) [Clang 18.1.8 ]",
+      "tests": {
+        "carculator": {
+          "tests": 48,
+          "failures": 0,
+          "errors": 0,
+          "skipped": 0,
+          "passed": 48,
+          "expected_failures": []
+        },
+        "carculator_bus": {
+          "tests": 30,
+          "failures": 0,
+          "errors": 0,
+          "skipped": 0,
+          "passed": 30,
+          "expected_failures": []
+        },
+        "carculator_truck": {
+          "tests": 34,
+          "failures": 0,
+          "errors": 0,
+          "skipped": 0,
+          "passed": 34,
+          "expected_failures": []
+        },
+        "carculator_two_wheeler": {
+          "tests": 19,
+          "failures": 0,
+          "errors": 0,
+          "skipped": 1,
+          "passed": 18,
+          "expected_failures": [
+            "Known data/cost defect: electric bicycle glider cost is negative; requires scientific review"
+          ]
+        },
+        "carculator_utils": {
+          "tests": 54,
+          "failures": 0,
+          "errors": 0,
+          "skipped": 0,
+          "passed": 54,
+          "expected_failures": []
+        }
+      }
+    },
+    "python312": {
+      "python": "3.12.12 | packaged by conda-forge | (main, Oct 22 2025, 23:34:53) [Clang 19.1.7 ]",
+      "tests": {
+        "carculator": {
+          "tests": 48,
+          "failures": 0,
+          "errors": 0,
+          "skipped": 0,
+          "passed": 48,
+          "expected_failures": []
+        },
+        "carculator_bus": {
+          "tests": 30,
+          "failures": 0,
+          "errors": 0,
+          "skipped": 0,
+          "passed": 30,
+          "expected_failures": []
+        },
+        "carculator_truck": {
+          "tests": 34,
+          "failures": 0,
+          "errors": 0,
+          "skipped": 0,
+          "passed": 34,
+          "expected_failures": []
+        },
+        "carculator_two_wheeler": {
+          "tests": 19,
+          "failures": 0,
+          "errors": 0,
+          "skipped": 1,
+          "passed": 18,
+          "expected_failures": [
+            "Known data/cost defect: electric bicycle glider cost is negative; requires scientific review"
+          ]
+        },
+        "carculator_utils": {
+          "tests": 54,
+          "failures": 0,
+          "errors": 0,
+          "skipped": 0,
+          "passed": 54,
+          "expected_failures": []
+        }
+      }
+    }
+  },
+  "consumer_source_tests": {
+    "python": "3.11.12",
+    "flaskCarculator": {
+      "passed": 8
+    },
+    "carculator_online": {
+      "passed": 2
+    },
+    "verified_in": "Previous hardening batch; not rerun for the unit-test/cost-arithmetic expansion"
+  },
+  "batch": "Focused unit tests and cost arithmetic",
+  "source_commits": {
+    "carculator_utils": "3f951d8d6c691ec86620400463cef1f6c5461b01",
+    "carculator": "706175287176b9db747f9fb9121bb3fd14cf2f00",
+    "carculator_bus": "7f4947bea48252c3683039208a9a44e64dadb4f1",
+    "carculator_truck": "aa8fc8a2c31f58a2714fc7a6b0e20ba49d873424",
+    "carculator_two_wheeler": "755ebb1ba6ff8156d2afb97164d41f35a1c771d0"
+  }
+}

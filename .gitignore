@@ -25,6 +25,8 @@ parts/
 sdist/
 var/
 wheels/
+directory/
+.idea/
 *.egg-info/
 .installed.cfg
 *.egg
@@ -131,3 +133,9 @@ venv.bak/
 
 # IntelliJ
 /out/
+
+# Local agent guidance
+AGENTS.md
+
+# macOS Finder metadata
+.DS_Store

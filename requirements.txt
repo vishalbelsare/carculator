@@ -1,11 +1,2 @@
-scipy
-pyprind
-pandas
-xarray==0.17
-numpy
-klausen
-xlrd
-numexpr
-bw2io>0.8.0
-pycountry
-wurst
+# Runtime dependencies are declared in pyproject.toml.
+.

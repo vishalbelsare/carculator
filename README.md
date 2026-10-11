@@ -1,151 +1,162 @@
-# ``carculator``
+# carculator
 
-<p align="center">
-  <img style="height:130px;" src="https://github.com/romainsacchi/coarse/raw/master/docs/mediumsmall.png">
-</p>
+Prospective environmental and economic life cycle assessment of passenger cars and light-duty vehicles.
 
-<p align="center">
-  <a href="https://badge.fury.io/py/carculator" target="_blank"><img src="https://badge.fury.io/py/carculator.svg"></a>
-  <a href="https://github.com/romainsacchi/carculator" target="_blank"><img src="https://github.com/romainsacchi/carculator/actions/workflows/main.yml/badge.svg?branch=master"></a>
-  <a href="https://ci.appveyor.com/project/romainsacchi/carculator" target="_blank"><img src="https://ci.appveyor.com/api/projects/status/github/romainsacchi/carculator?svg=true"></a>
-  <a href="https://coveralls.io/github/romainsacchi/carculator" target="_blank"><img src="https://coveralls.io/repos/github/romainsacchi/carculator/badge.svg"></a>
-  <a href="https://carculator.readthedocs.io/en/latest/" target="_blank"><img src="https://readthedocs.org/projects/carculator/badge/?version=latest"></a>
-  <a href="https://doi.org/10.5281/zenodo.3778259"><img src="https://zenodo.org/badge/DOI/10.5281/zenodo.3778259.svg" alt="DOI"></a>
-</p>
+[![Installed artifacts](https://github.com/Laboratory-for-Energy-Systems-Analysis/carculator/actions/workflows/main.yml/badge.svg?branch=master)](https://github.com/Laboratory-for-Energy-Systems-Analysis/carculator/actions/workflows/main.yml)
+[![PyPI](https://img.shields.io/pypi/v/carculator)](https://pypi.org/project/carculator/)
 
-Prospective environmental and economic life cycle assessment of vehicles made blazing fast.
+Developed at the [Paul Scherrer Institute](https://www.psi.ch/en).
+This checkout prepares the unpublished release **1.9.7**; see [CHANGELOG.md](https://github.com/Laboratory-for-Energy-Systems-Analysis/carculator/blob/master/CHANGELOG.md) for release status and changes.
 
-A fully parameterized Python model developed by the [Technology Assessment group](https://www.psi.ch/en/ta) of the
-[Paul Scherrer Institut](https://www.psi.ch/en) to perform life cycle assessments (LCA) of vehicles.
+## Installation
 
-See [the documentation](https://carculator.readthedocs.io/en/latest/index.html) for more detail, validation, etc.
+Use **Python 3.12** (`>=3.12,<3.13`) and a fresh environment. The shared runtime
+requires NumPy `>=1.26.4,<2`.
 
-See our [examples notebook](https://github.com/romainsacchi/carculator/blob/master/examples/Examples.ipynb) as well.
-
-## Table of Contents
-
-- [Background](#background)
-  - [What is Life Cycle Assessment](#what-is-life-cycle-assessment)
-  - [Why carculator](#why-carculator)
-- [Install](#install)
-- [Usage](#usage)
-  - [As a Python library](#as-a-python-library)
-  - [As a web app](#as-a-web-app)
-- [Support](#support)
-- [Maintainers](#maintainers)
-- [Contributing](#contributing)
-- [License](#license)
-
-## Background
-
-### What is Life Cycle Assessment?
-
-Life Cycle Assessment (LCA) is a systematic way of accounting for environmental impacts along the relevant phases of the life of a product or service.
-Typically, the LCA of a passenger vehicle includes the raw material extraction, the manufacture of the vehicle, its distribution, use and maintenance, as well as its disposal.
-The compiled inventories of material and energy required along the life cycle of the vehicle is characterized against some impact categories (e.g., climate change).
-
-In the research field of mobility, LCA is widely used to investigate the superiority of a technology over another one.
-
-### Why ``carculator``?
-
-``carculator`` allows to:
-* produce [life cycle assessment (LCA)](https://en.wikipedia.org/wiki/Life-cycle_assessment) results that include conventional midpoint impact assessment indicators as well cost indicators
-*  ``carculator`` uses time- and energy scenario-differentiated background inventories for the future, based on outputs of Integrated Asessment Model [REMIND](https://www.pik-potsdam.de/research/transformation-pathways/models/remind/remind). 
-* calculate hot pollutant and noise emissions based on a specified driving cycle
-* produce error propagation analyzes (i.e., Monte Carlo) while preserving relations between inputs and outputs
-* control all the parameters sensitive to the foreground model (i.e., the vehicles) but also to the background model
-(i.e., supply of fuel, battery chemistry, etc.)
-* and easily export the vehicle models as inventories to be further imported in the [Brightway2](https://brightwaylca.org/) LCA framework
-  or the [SimaPro](https://www.simapro.com/) LCA software.
-
-``carculator`` integrates well with the [Brightway](https://brightwaylca.org/) LCA framework.
-
-``carculator`` was built based on work described in [Uncertain environmental footprint of current and future battery electric vehicles by Cox, et al (2018)](https://pubs.acs.org/doi/abs/10.1021/acs.est.8b00261).
-
-## Install
-
-``carculator`` is at an early stage of development and is subject to continuous change and improvement.
-Three ways of installing ``carculator`` are suggested.
-
-We recommend the installation on **Python 3.7 or above**.
-
-### Installation of the latest version, using conda
-
-    conda install -c romainsacchi carculator
-
-### Installation of a stable release (1.3.1) from Pypi
-
-    pip install carculator
-
-## Usage
-
-### As a Python library
-
-Calculate the fuel efficiency (or ``Tank to wheel`` energy requirement) in km/L of petrol-equivalent of current SUVs for the driving cycle WLTC 3.4
-over 800 Monte Carlo iterations:
-
-```python
-    from carculator import *
-    import matplotlib.pyplot as plt
-    cip = CarInputParameters()
-    cip.stochastic(800)
-    dcts, array = fill_xarray_from_input_parameters(cip)
-    cm = CarModel(array, cycle='WLTC 3.4')
-    cm.set_all()
-    TtW_energy = 1 / (cm.array.sel(size='SUV', year=2017, parameter='TtW energy') / 42000) # assuming 42 MJ/L petrol
-
-    l_powertrains = TtW_energy.powertrain
-    [plt.hist(e, bins=50, alpha=.8, label=e.powertrain.values) for e in TtW_energy]
-    plt.xlabel('km/L petrol-equivalent')
-    plt.ylabel('number of iterations')
-    plt.legend()
+```bash
+python3.12 -m venv .venv
+source .venv/bin/activate
 ```
 
-![MC results](https://github.com/romainsacchi/coarse/raw/master/docs/stochastic_example_ttw.png)
+On Windows, activate with `.venv\Scripts\activate`. After publication, install
+this release from PyPI:
 
-Compare the carbon footprint of electric vehicles with that of rechargeable hybrid vehicles for different size categories today and in the future
-over 500 Monte Carlo iterations:
-```python
-    from carculator import *
-    cip = CarInputParameters()
-    cip.stochastic(500)
-    dcts, array = fill_xarray_from_input_parameters(cip)
-    cm = CarModel(array, cycle='WLTC')
-    cm.set_all()
-    scope = {
-        'powertrain':['BEV', 'PHEV'],
-    }
-    ic = InventoryCalculation(cm.array, scope=scope)
-
-    results = ic.calculate_impacts()
-    data_MC = results.sel(impact_category='climate change').sum(axis=3).to_dataframe('climate change')
-    plt.style.use('seaborn')
-    data_MC.unstack(level=[0,1,2]).boxplot(showfliers=False, figsize=(20,5))
-    plt.xticks(rotation=70)
-    plt.ylabel('kg CO2-eq./vkm')
+```bash
+python -m pip install "carculator==1.9.7"
 ```
 
-![MC results](https://github.com/romainsacchi/coarse/raw/master/docs/example_stochastic_BEV_PHEV.png)
+Before publication, use the matching source checkouts as described under development.
+Core calculations use bundled resources and need no Brightway project, ecoinvent
+installation or network access. The matching `carculator_utils` runtime installs
+`brightpath>=1.0.0a6,<1.1` for Brightway Excel, SimaPro CSV and openLCA JSON-LD
+exports. It uses Brightpath's v1 API, currently an alpha; model and LCIA
+calculations do not import Brightpath or Brightway.
 
-For more examples, see [examples](https://github.com/romainsacchi/carculator/blob/master/examples/Examples.ipynb).
+The `excel` extra remains a compatibility alias. To select the tested legacy
+Brightway stack (`bw2io<0.9`, `bw2data<4`, `bw2calc<2`), use:
 
-## As a Web app
+```bash
+python -m pip install "carculator[brightway]==1.9.7"
+```
 
-``carculator`` has a [graphical user interface](https://carculator.psi.ch) for fast comparisons of vehicles.
+Brightpath also installs `bw2io` without that extra. Export targets ecoinvent
+3.12 cut-off by default; legacy 3.9/3.10 targets reject suppliers without
+verified older links. External suppliers must be matched to the corresponding
+background in the destination tool. See [inventory export](docs/inventory_export.rst).
 
-## Support
+## Quick start
 
-Do not hesitate to contact the development team at [carculator@psi.ch](mailto:carculator@psi.ch).
+```python
+from carculator import (
+    CarInputParameters,
+    CarModel,
+    InventoryCar,
+    fill_xarray_from_input_parameters,
+)
 
-## Maintainers
+inputs = CarInputParameters()
+inputs.static()
+_, array = fill_xarray_from_input_parameters(
+    inputs,
+    scope={"size": ["Medium"], "powertrain": ["ICEV-p", "BEV"], "year": [2025]},
+)
+model = CarModel(array, cycle="WLTC")
+model.set_all()
+print(model["TtW energy"])  # kJ per vehicle-kilometre
 
-* [Romain Sacchi](https://github.com/romainsacchi)
-* [Chris Mutel](https://github.com/cmutel/)
+inventory = InventoryCar(model, functional_unit="vkm")
+impacts = inventory.calculate_impacts()
+print(impacts.sel(impact_category="climate change").sum("impact"))
+```
 
-## Contributing
+The example reports impacts per vehicle-kilometre.
 
-See [contributing](https://github.com/romainsacchi/carculator/blob/master/CONTRIBUTING.md).
+## Inventory export
 
-## License
+With the completed `inventory` from the quick start:
 
-[BSD-3-Clause](https://github.com/romainsacchi/carculator/blob/master/LICENSE). Copyright 2020 Paul Scherrer Institut.
+```python
+workbook = inventory.export_lci(software="brightway2", format="file", directory="exports")
+simapro_csv = inventory.export_lci(software="simapro", format="file", directory="exports")
+foreground_zip = inventory.export_lci(software="openlca", format="file", directory="exports")
+```
+
+Retain exactly one sample before constructing the model and inventory. Each year
+gets its own export; multiple years return a list. Exports preserve the original
+inventory and calculated impacts. The default `export_lci()` returns an unlinked
+Brightway importer.
+
+The openLCA ZIP contains foreground processes, without an ecoinvent background or
+LCIA methods; map external providers and elementary flows before calculation.
+SimaPro CSV uses Latin-1 and warns when omitting custom noise flows. See the
+[export guide](docs/inventory_export.rst) for return types, sample selection and
+format-specific limitations.
+
+## Battery sizing
+
+Set nominal capacity with `energy_storage={"capacity": {("BEV", "Medium", 2025): 60}}`.
+Set pack mass through the input array parameter `energy battery mass` (kg).
+Set a desired range with `target_range={("BEV", "Medium", 2025): 400}`.
+Range targets supersede capacity overrides; capacity overrides supersede pack-mass inputs.
+The range solver converges battery mass and energy demand together. See the
+[battery-sizing documentation](https://github.com/Laboratory-for-Energy-Systems-Analysis/carculator/blob/master/docs/modeling.rst) for complete examples.
+
+## Modelling and validation
+
+For a guided explanation of the inputs, units and assumptions, read
+[Understanding inputs and results](docs/interpretation.rst). The
+[validation examples](docs/validation_examples.rst) include bar charts, source
+records and the limits of each comparison. Measured energy comparisons are
+separate from the model-to-model comparison of the background database update.
+
+
+Battery unit prices supplied by users now survive chemistry selection and cost
+adjustment. Use `battery_costs` for explicit prices scoped by vehicle, year and
+sample; see [battery-cost inputs](docs/usage.rst#battery-unit-costs).
+
+The vehicle models include tabulated **2025** parameters and documented temporal
+extensions. These combine engineering assumptions and selected calibration evidence;
+they are not independent measurements for every vehicle configuration.
+
+`TtW energy` is in kJ/km. For BEVs it is net stored-energy depletion;
+`model.battery_terminal_energy` reports terminal DC separately, while
+`electricity consumption` is grid electricity in kWh/km. Identify the measurement
+boundary before comparing energy outputs. Availability-masked zeroes do not
+represent physically zero consumption.
+
+Supported background scenarios are `SSP2-NPi`, `SSP2-PkBudg1000`,
+`SSP2-PkBudg650`, and `static`. ReCiPe supports midpoint/endpoint and EF midpoint.
+Use fresh model instances for independent cases. `inputs.stochastic(n, seed=...)`
+seeds parameter draws and the projected-cost factors used by the current
+array builder. Keep its auxiliary sample coordinates; older hand-built arrays
+do not recover that seed automatically.
+
+See [validation and limitations](https://github.com/Laboratory-for-Energy-Systems-Analysis/carculator/blob/master/docs/validity.rst), [migration notes](https://github.com/Laboratory-for-Energy-Systems-Analysis/carculator/blob/master/docs/release.rst)
+and the [documentation](https://carculator.readthedocs.io/en/latest/).
+
+## Development and release
+
+Use matching sibling checkouts, especially `carculator_utils` **1.3.7 or newer**:
+
+```bash
+python -m pip install -e "../carculator_utils[test,excel,brightway]" -e ".[test,docs,excel,brightway]"
+python -m pip check
+python -m pytest
+python -m sphinx -b html docs docs/_build/html
+```
+
+The `docs` extra includes the extensions used by this repository.
+See [RELEASING.md](https://github.com/Laboratory-for-Energy-Systems-Analysis/carculator/blob/master/RELEASING.md) for artifact verification, release order and publication.
+
+## Support and license
+
+Contact [carculator@psi.ch](mailto:carculator@psi.ch) or open an [issue](https://github.com/Laboratory-for-Energy-Systems-Analysis/carculator/issues).
+Maintained by [Romain Sacchi](https://github.com/romainsacchi), with contributions
+from the carculator development team. See [contributing](https://github.com/Laboratory-for-Energy-Systems-Analysis/carculator/blob/master/CONTRIBUTING.md).
+Licensed under [BSD-3-Clause](https://github.com/Laboratory-for-Energy-Systems-Analysis/carculator/blob/master/LICENSE).
+
+Scientific background: [Cox et al. (2018)](https://doi.org/10.1021/acs.est.8b00261).
+
+The shared LCA background now uses premise 2.5.4 and ecoinvent 3.12 cutoff.
+The former `NMC-523` option is replaced by `NMC-532` (actual Ni:Mn:Co 5:3:2
+inventory); update custom chemistry selections. See `docs/release.rst`.
